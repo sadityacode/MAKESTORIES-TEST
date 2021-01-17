@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { getConferenceList } from "./services";
+// import { getConferenceList } from "./services";
 import { each, filter, size, map } from "lodash";
 import { connect } from "react-redux";
 import { fire, storage } from "../config/fire";
 import ToastUtils from "../utils/handleToast";
-import history from "../history";
 
 const mapStateToProps = state => {
   const { LOADING_CONFERENCE, SUCCESS_CONFERENCE, ERROR_CONFERENCE } = state;
@@ -17,7 +16,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  getConferenceList
+  // getConferenceList
 };
 
 const Container = Main =>
@@ -25,18 +24,9 @@ const Container = Main =>
     mapStateToProps,
     mapDispatchToProps
   )(
-    class Presentation extends Component {
+    class ProfilePage extends Component {
       state = {
-        loginEmail: "",
-        loginPassword: "",
-        signupEmail: "",
-        signupPassword: "",
-        signupFullName: "",
-        signupMobileNumber: "",
-        signupAddress: "",
-        signupAge: "",
-        signupProfilePicture: "",
-        typeOfForm: "signin"
+        profilePicture: ""
       };
 
       componentDidMount() {}
@@ -59,17 +49,17 @@ const Container = Main =>
       };
 
       _fetchConferenceList = async () => {
-        const responce = await this.props.getConferenceList();
-        if (responce.status === 200) {
-          const list = [...responce.data.free, ...responce.data.paid];
-          await this.setState({
-            conferenceDataList: [...list]
-          });
-        } else {
-          await this.setState({
-            conferenceDataList: []
-          });
-        }
+        // const responce = await this.props.getConferenceList();
+        // if (responce.status === 200) {
+        //   const list = [...responce.data.free, ...responce.data.paid];
+        //   await this.setState({
+        //     conferenceDataList: [...list]
+        //   });
+        // } else {
+        //   await this.setState({
+        //     conferenceDataList: []
+        //   });
+        // }
       };
 
       resetForm = () => {
@@ -114,8 +104,6 @@ const Container = Main =>
                     }!`
                   });
 
-                  history.push(`/user/${uid}`);
-
                   this.resetForm();
                 })
                 .catch(error => {
@@ -123,8 +111,6 @@ const Container = Main =>
                     operation: "success",
                     message: "Welcome Home User!"
                   });
-
-                  history.push(`/user/${uid}`);
 
                   this.resetForm();
                 });
@@ -199,8 +185,6 @@ const Container = Main =>
                     message: `${signupFullName} register successfully.`
                   });
 
-                  history.push(`/user/${uid}`);
-
                   this.resetForm();
                 },
                 () => {
@@ -221,8 +205,6 @@ const Container = Main =>
                     operation: "success",
                     message: `${signupFullName} register successfully.`
                   });
-
-                  history.push(`/user/${uid}`);
 
                   this.resetForm();
                 }

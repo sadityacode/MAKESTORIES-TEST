@@ -2,6 +2,18 @@
   text-align: center;
 }
 
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+.Toastify__toast {
+  padding: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

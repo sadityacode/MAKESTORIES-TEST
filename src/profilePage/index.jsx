@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "./container";
 import styled from "styled-components";
-import background from "../assets/images/loginBackgroud.jpg";
+import background from "../assets/images/cakeBackground.jpeg";
 import dummyProfilePicture from "../assets/images/profilePicture.jpg";
 import FullPageLoader from "../commonComponent/FullPageLoader";
 

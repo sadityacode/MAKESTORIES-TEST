@@ -1,12 +1,18 @@
 import React from "react";
-import { Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import history from "../history";
-import routes from "./routes";
+
+import Page from "../page";
+import UserPage from "../profilePage";
 
 const Routes = () => (
   <Router history={history} onUpdate={() => window.scrollTo(0, 0)}>
-    {routes}
+    <Switch>
+      <Route path="/" exact render={props => <Page {...props} />} />
+      <Route path="/user/:uid" render={props => <UserPage {...props} />} />
+    </Switch>
   </Router>
 );
 

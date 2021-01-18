@@ -23,8 +23,7 @@ const Container = Main =>
     mapStateToProps,
     mapDispatchToProps
   )(
-    class Presentation extends Component {
-      _isMounted = false;
+    class PageContainer extends Component {
       state = {
         loginEmail: "",
         loginPassword: "",
@@ -39,18 +38,16 @@ const Container = Main =>
       };
 
       componentDidMount() {
-        this._isMounted = true;
+        this.checkUserIsAlreadySignIn();
+      }
 
-        if (this._isMounted) {
-          this.authListener();
+      checkUserIsAlreadySignIn = () => {
+        var user = fire.auth().currentUser;
+
+        if (user) {
+          this.props.history.push(`/user/${user.uid}`);
         }
-      }
-
-      componentWillUnmount() {
-        this._isMounted = false;
-      }
-
-      authListener = () => {};
+      };
 
       chnageFormType = type => {
         this.setState({
@@ -115,7 +112,7 @@ const Container = Main =>
 
                   // await this.resetForm();
 
-                  history.push(`/user/${uid}`);
+                  this.props.history.push(`/user/${uid}`);
                 })
                 .catch(async error => {
                   await this.props.dataLoadingStop();
@@ -126,7 +123,7 @@ const Container = Main =>
 
                   // await this.resetForm();
 
-                  history.push(`/user/${uid}`);
+                  this.props.history.push(`/user/${uid}`);
                 });
             })
             .catch(async error => {
@@ -204,7 +201,7 @@ const Container = Main =>
 
                   // await this.resetForm();
 
-                  history.push(`/user/${uid}`);
+                  this.props.history.push(`/user/${uid}`);
                 },
                 async () => {
                   storage
@@ -229,7 +226,7 @@ const Container = Main =>
 
                   // await this.resetForm();
 
-                  history.push(`/user/${uid}`);
+                  this.props.history.push(`/user/${uid}`);
                 }
               );
             })

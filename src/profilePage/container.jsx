@@ -197,7 +197,7 @@ const Container = Main =>
                   message: `Something went wrong please try again`
                 });
 
-                history.push(`/`);
+                this.props.history.push(`/`);
               }
             })
             .catch(error => {
@@ -207,7 +207,7 @@ const Container = Main =>
                 message: error.message
               });
 
-              history.push(`/`);
+              this.props.history.push(`/`);
             });
         } else {
           this.props.dataLoadingStop();
@@ -216,7 +216,7 @@ const Container = Main =>
             message: `Something went wrong please try again`
           });
 
-          history.push(`/`);
+          this.props.history.push(`/`);
         }
       };
 
@@ -250,7 +250,7 @@ const Container = Main =>
               message: `User sign out successfully`
             });
 
-            history.push(`/`);
+            this.props.history.push(`/`);
           })
           .catch(error => {
             ToastUtils.handleToast({

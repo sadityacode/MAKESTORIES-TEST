@@ -3,6 +3,7 @@ import Container from "./container";
 import styled from "styled-components";
 import background from "../assets/images/loginBackgroud.jpg";
 import dummyProfilePicture from "../assets/images/profilePicture.jpg";
+import FullPageLoader from "../commonComponent/FullPageLoader";
 
 const ProfilePage = props => {
   const {
@@ -17,11 +18,13 @@ const ProfilePage = props => {
     handleInputChange,
     isEdited,
     updateUserData,
-    signOut
+    signOut,
+    isLoading
   } = props;
 
   return (
     <>
+      {isLoading && <FullPageLoader layerIndex={3} />}
       <Profilepage>
         <PageWrapper>
           <CoverPage />
@@ -85,25 +88,7 @@ const ProfilePage = props => {
               </About>
               <EmailId>
                 <h3>email id : </h3>
-                {/* <ProfileIcon
-                  className="fa fa-pencil"
-                  onClick={() => editField("emailId")}
-                /> */}
-                {/* {typeOfField === "emailId" ? (
-                  <EditContainer>
-                    <Input
-                      className={"input-field"}
-                      type="text"
-                      id="emailid"
-                      placeholder="Email Id"
-                      name="emailId"
-                      value={emailId}
-                      onChange={handleInputChange}
-                    />
-                  </EditContainer>
-                ) : ( */}
                 <p>{emailId}</p>
-                {/* )} */}
               </EmailId>
               <MobileNumber>
                 <h3>mobile number : </h3>

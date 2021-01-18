@@ -1,23 +1,21 @@
 import React, { Component } from "react";
-import { getConferenceList } from "./services";
-import { each, filter, size, map } from "lodash";
+import { dataLoadingStart, dataLoadingStop } from "../services";
 import { connect } from "react-redux";
 import { fire, storage } from "../config/fire";
 import ToastUtils from "../utils/handleToast";
 import history from "../history";
 
 const mapStateToProps = state => {
-  const { LOADING_CONFERENCE, SUCCESS_CONFERENCE, ERROR_CONFERENCE } = state;
+  const { DATA_LOADING } = state;
 
   return {
-    ...LOADING_CONFERENCE,
-    ...SUCCESS_CONFERENCE,
-    ...ERROR_CONFERENCE
+    ...DATA_LOADING
   };
 };
 
 const mapDispatchToProps = {
-  getConferenceList
+  dataLoadingStart,
+  dataLoadingStop
 };
 
 const Container = Main =>
@@ -26,6 +24,7 @@ const Container = Main =>
     mapDispatchToProps
   )(
     class Presentation extends Component {
+      _isMounted = false;
       state = {
         loginEmail: "",
         loginPassword: "",
@@ -40,18 +39,18 @@ const Container = Main =>
       };
 
       componentDidMount() {
-        this.authListener();
+        this._isMounted = true;
+
+        if (this._isMounted) {
+          this.authListener();
+        }
       }
 
-      authListener = () => {
-        fire.auth().onAuthStateChanged(user => {
-          if (user) {
-            history.push(`/user/${user.uid}`);
-          } else {
-            console.log(null);
-          }
-        });
-      };
+      componentWillUnmount() {
+        this._isMounted = false;
+      }
+
+      authListener = () => {};
 
       chnageFormType = type => {
         this.setState({
@@ -70,28 +69,14 @@ const Container = Main =>
             });
       };
 
-      _fetchConferenceList = async () => {
-        const responce = await this.props.getConferenceList();
-        if (responce.status === 200) {
-          const list = [...responce.data.free, ...responce.data.paid];
-          await this.setState({
-            conferenceDataList: [...list]
-          });
-        } else {
-          await this.setState({
-            conferenceDataList: []
-          });
-        }
-      };
-
-      resetForm = () => {
+      resetForm = async () => {
         let profilePictureRef = document.querySelector(
           "#signup-profilePicture"
         );
 
         profilePictureRef && (profilePictureRef.value = "");
 
-        this.setState({
+        await this.setState({
           loginEmail: "",
           loginPassword: "",
           signupEmail: "",
@@ -108,6 +93,7 @@ const Container = Main =>
         const { loginEmail, loginPassword } = this.state;
 
         if (loginEmail && loginPassword) {
+          this.props.dataLoadingStart();
           fire
             .auth()
             .signInWithEmailAndPassword(loginEmail, loginPassword)
@@ -118,7 +104,8 @@ const Container = Main =>
                 .database()
                 .ref(`Users/${uid}`)
                 .once("value")
-                .then(snapshot => {
+                .then(async snapshot => {
+                  await this.props.dataLoadingStop();
                   ToastUtils.handleToast({
                     operation: "success",
                     message: `Welcome Home ${
@@ -126,22 +113,24 @@ const Container = Main =>
                     }!`
                   });
 
-                  this.resetForm();
+                  // await this.resetForm();
 
                   history.push(`/user/${uid}`);
                 })
-                .catch(error => {
+                .catch(async error => {
+                  await this.props.dataLoadingStop();
                   ToastUtils.handleToast({
                     operation: "success",
                     message: "Welcome Home User!"
                   });
 
-                  this.resetForm();
+                  // await this.resetForm();
 
                   history.push(`/user/${uid}`);
                 });
             })
-            .catch(error => {
+            .catch(async error => {
+              await this.props.dataLoadingStop();
               ToastUtils.handleToast({
                 operation: "error",
                 message: error.message
@@ -175,6 +164,7 @@ const Container = Main =>
           signupAge &&
           signupProfilePicture
         ) {
+          this.props.dataLoadingStart();
           fire
             .auth()
             .createUserWithEmailAndPassword(signupEmail, signupPassword)
@@ -200,7 +190,8 @@ const Container = Main =>
               uploadImageTask.on(
                 "state_changed",
                 snapshot => {},
-                error => {
+                async error => {
+                  await this.props.dataLoadingStop();
                   ToastUtils.handleToast({
                     operation: "error",
                     message: error.message
@@ -211,11 +202,11 @@ const Container = Main =>
                     message: `${signupFullName} register successfully.`
                   });
 
-                  this.resetForm();
+                  // await this.resetForm();
 
                   history.push(`/user/${uid}`);
                 },
-                () => {
+                async () => {
                   storage
                     .ref("Images")
                     .child(uid)
@@ -229,18 +220,21 @@ const Container = Main =>
                         });
                     });
 
+                  await this.props.dataLoadingStop();
+
                   ToastUtils.handleToast({
                     operation: "success",
                     message: `${signupFullName} register successfully.`
                   });
 
-                  this.resetForm();
+                  // await this.resetForm();
 
                   history.push(`/user/${uid}`);
                 }
               );
             })
-            .catch(error => {
+            .catch(async error => {
+              await this.props.dataLoadingStop();
               ToastUtils.handleToast({
                 operation: "error",
                 message: error.message

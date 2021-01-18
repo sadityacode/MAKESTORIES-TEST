@@ -1,23 +1,21 @@
 import React, { Component } from "react";
-// import { getConferenceList } from "./services";
-import { each, filter, size, map } from "lodash";
+import { dataLoadingStart, dataLoadingStop } from "../services";
 import { connect } from "react-redux";
 import { fire, storage } from "../config/fire";
 import ToastUtils from "../utils/handleToast";
 import history from "../history";
 
 const mapStateToProps = state => {
-  const { LOADING_CONFERENCE, SUCCESS_CONFERENCE, ERROR_CONFERENCE } = state;
+  const { DATA_LOADING } = state;
 
   return {
-    ...LOADING_CONFERENCE,
-    ...SUCCESS_CONFERENCE,
-    ...ERROR_CONFERENCE
+    ...DATA_LOADING
   };
 };
 
 const mapDispatchToProps = {
-  // getConferenceList
+  dataLoadingStart,
+  dataLoadingStop
 };
 
 const Container = Main =>
@@ -50,9 +48,9 @@ const Container = Main =>
                 typeOfField: ""
               });
           });
-
-          this.fetchUserDetails();
         }
+
+        this.fetchUserDetails();
       }
 
       componentWillUnmount() {
@@ -60,6 +58,7 @@ const Container = Main =>
       }
 
       updateUserProfilePicture = () => {
+        this.props.dataLoadingStart();
         const { updatedProfilePicture } = this.state;
 
         const {
@@ -76,6 +75,7 @@ const Container = Main =>
           "state_changed",
           snapshot => {},
           error => {
+            this.props.dataLoadingStop();
             ToastUtils.handleToast({
               operation: "error",
               message: error.message
@@ -98,6 +98,13 @@ const Container = Main =>
                   profilePicture: url
                 });
               });
+
+            this.props.dataLoadingStop();
+
+            ToastUtils.handleToast({
+              operation: "success",
+              message: `profile picture uploaded successfully.`
+            });
           }
         );
       };
@@ -118,6 +125,7 @@ const Container = Main =>
             }
           } = this.props;
 
+          this.props.dataLoadingStart();
           fire
             .database()
             .ref(`Users/${uid}`)
@@ -129,6 +137,7 @@ const Container = Main =>
               mobileNumber
             })
             .then(() => {
+              this.props.dataLoadingStop();
               ToastUtils.handleToast({
                 operation: "success",
                 message: `Users data updated successfully.`
@@ -139,6 +148,7 @@ const Container = Main =>
               });
             })
             .catch(error => {
+              this.props.dataLoadingStop();
               ToastUtils.handleToast({
                 operation: "error",
                 message: error.message
@@ -155,6 +165,7 @@ const Container = Main =>
         } = this.props;
 
         if (uid) {
+          this.props.dataLoadingStart();
           fire
             .database()
             .ref(`Users/${uid}`)
@@ -178,7 +189,9 @@ const Container = Main =>
                   address,
                   profilePicture
                 });
+                this.props.dataLoadingStop();
               } else {
+                this.props.dataLoadingStop();
                 ToastUtils.handleToast({
                   operation: "error",
                   message: `Something went wrong please try again`
@@ -188,6 +201,7 @@ const Container = Main =>
               }
             })
             .catch(error => {
+              this.props.dataLoadingStop();
               ToastUtils.handleToast({
                 operation: "error",
                 message: error.message
@@ -196,6 +210,7 @@ const Container = Main =>
               history.push(`/`);
             });
         } else {
+          this.props.dataLoadingStop();
           ToastUtils.handleToast({
             operation: "error",
             message: `Something went wrong please try again`
@@ -235,7 +250,7 @@ const Container = Main =>
               message: `User sign out successfully`
             });
 
-            history.push("/");
+            history.push(`/`);
           })
           .catch(error => {
             ToastUtils.handleToast({

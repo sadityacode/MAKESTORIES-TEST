@@ -2,12 +2,12 @@ import React from "react";
 import { Route } from "react-router-dom";
 
 // routes
-import ProfilePage from "../index";
+import UserPage from "../index";
 
 const ProfilePageRoute = () => {
   const routes = (
     <>
-      <Route path="/user/:uid" render={props => <ProfilePage {...props} />} />
+      <Route path="/user/:uid" render={props => <UserPage {...props} />} />
     </>
   );
 

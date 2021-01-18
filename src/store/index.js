@@ -12,7 +12,7 @@ const persistConfig = {
 const reducerList = combineReducers(reducers);
 const persistedReducer = persistReducer(persistConfig, reducerList);
 
-let store = createStore(persistedReducer, applyMiddleware(thunk));
+let store = createStore(reducerList, applyMiddleware(thunk));
 
 let persistor = persistStore(store);
 export default function configureStore() {

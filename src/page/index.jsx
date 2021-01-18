@@ -18,11 +18,12 @@ const LandingPage = props => {
     signupAddress,
     signupAge,
     signUpUser,
-    signInUser
+    signInUser,
+    isLoading
   } = props;
   return (
     <>
-      {true && <FullPageLoader layerIndex={3} />}
+      {isLoading && <FullPageLoader layerIndex={3} />}
       <Landingpage>
         <BluryBackgroundImage />
         <PageWrapper>

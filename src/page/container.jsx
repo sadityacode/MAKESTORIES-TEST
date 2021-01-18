@@ -39,7 +39,19 @@ const Container = Main =>
         typeOfForm: "signin"
       };
 
-      componentDidMount() {}
+      componentDidMount() {
+        this.authListener();
+      }
+
+      authListener = () => {
+        fire.auth().onAuthStateChanged(user => {
+          if (user) {
+            history.push(`/user/${user.uid}`);
+          } else {
+            console.log(null);
+          }
+        });
+      };
 
       chnageFormType = type => {
         this.setState({
@@ -114,9 +126,9 @@ const Container = Main =>
                     }!`
                   });
 
-                  history.push(`/user/${uid}`);
-
                   this.resetForm();
+
+                  history.push(`/user/${uid}`);
                 })
                 .catch(error => {
                   ToastUtils.handleToast({
@@ -124,9 +136,9 @@ const Container = Main =>
                     message: "Welcome Home User!"
                   });
 
-                  history.push(`/user/${uid}`);
-
                   this.resetForm();
+
+                  history.push(`/user/${uid}`);
                 });
             })
             .catch(error => {
@@ -199,9 +211,9 @@ const Container = Main =>
                     message: `${signupFullName} register successfully.`
                   });
 
-                  history.push(`/user/${uid}`);
-
                   this.resetForm();
+
+                  history.push(`/user/${uid}`);
                 },
                 () => {
                   storage
@@ -222,9 +234,9 @@ const Container = Main =>
                     message: `${signupFullName} register successfully.`
                   });
 
-                  history.push(`/user/${uid}`);
-
                   this.resetForm();
+
+                  history.push(`/user/${uid}`);
                 }
               );
             })

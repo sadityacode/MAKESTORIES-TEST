@@ -2,6 +2,7 @@ import React from "react";
 import Container from "./container";
 import styled from "styled-components";
 import background from "../assets/images/loginBackgroud.jpg";
+import FullPageLoader from "../commonComponent/FullPageLoader";
 
 const LandingPage = props => {
   const {
@@ -21,6 +22,7 @@ const LandingPage = props => {
   } = props;
   return (
     <>
+      {true && <FullPageLoader layerIndex={3} />}
       <Landingpage>
         <BluryBackgroundImage />
         <PageWrapper>

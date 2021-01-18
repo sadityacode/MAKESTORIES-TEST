@@ -4,6 +4,7 @@ import { each, filter, size, map } from "lodash";
 import { connect } from "react-redux";
 import { fire, storage } from "../config/fire";
 import ToastUtils from "../utils/handleToast";
+import history from "../history";
 
 const mapStateToProps = state => {
   const { LOADING_CONFERENCE, SUCCESS_CONFERENCE, ERROR_CONFERENCE } = state;
@@ -24,191 +25,118 @@ const Container = Main =>
     mapStateToProps,
     mapDispatchToProps
   )(
-    class ProfilePage extends Component {
+    class ProfilePageContainer extends Component {
+      _isMounted = false;
       state = {
-        profilePicture: ""
+        fullName: "",
+        emailId: "",
+        age: "",
+        mobileNumber: "",
+        address: "",
+        profilePicture: "",
+        typeOfField: "",
+        isEdited: false,
+        updatedProfilePicture: ""
       };
 
-      componentDidMount() {}
+      componentDidMount() {
+        this._isMounted = true;
 
-      chnageFormType = type => {
-        this.setState({
-          typeOfForm: type
-        });
-      };
-
-      handleInputChange = (e, type = "text") => {
-        type === "text"
-          ? this.setState({
-              [e.target.name]: e.target.value
-            })
-          : type === "file" &&
-            this.setState({
-              [e.target.name]: e.target.files[0]
-            });
-      };
-
-      _fetchConferenceList = async () => {
-        // const responce = await this.props.getConferenceList();
-        // if (responce.status === 200) {
-        //   const list = [...responce.data.free, ...responce.data.paid];
-        //   await this.setState({
-        //     conferenceDataList: [...list]
-        //   });
-        // } else {
-        //   await this.setState({
-        //     conferenceDataList: []
-        //   });
-        // }
-      };
-
-      resetForm = () => {
-        let profilePictureRef = document.querySelector(
-          "#signup-profilePicture"
-        );
-
-        profilePictureRef && (profilePictureRef.value = "");
-
-        this.setState({
-          loginEmail: "",
-          loginPassword: "",
-          signupEmail: "",
-          signupPassword: "",
-          signupFullName: "",
-          signupMobileNumber: "",
-          signupAddress: "",
-          signupAge: "",
-          signupProfilePicture: ""
-        });
-      };
-
-      signInUser = () => {
-        const { loginEmail, loginPassword } = this.state;
-
-        if (loginEmail && loginPassword) {
-          fire
-            .auth()
-            .signInWithEmailAndPassword(loginEmail, loginPassword)
-            .then(() => {
-              const uid = fire.auth().currentUser.uid;
-
-              fire
-                .database()
-                .ref(`Users/${uid}`)
-                .once("value")
-                .then(snapshot => {
-                  ToastUtils.handleToast({
-                    operation: "success",
-                    message: `Welcome Home ${
-                      snapshot.val() ? snapshot.val().fullName : "User"
-                    }!`
-                  });
-
-                  this.resetForm();
-                })
-                .catch(error => {
-                  ToastUtils.handleToast({
-                    operation: "success",
-                    message: "Welcome Home User!"
-                  });
-
-                  this.resetForm();
-                });
-            })
-            .catch(error => {
-              ToastUtils.handleToast({
-                operation: "error",
-                message: error.message
+        if (this._isMounted) {
+          window.addEventListener("click", e => {
+            e.target.classList.value.indexOf("fa-pencil") === -1 &&
+              e.target.classList.value.indexOf("input-field") === -1 &&
+              this.setState({
+                typeOfField: ""
               });
-            });
-        } else {
-          ToastUtils.handleToast({
-            operation: "error",
-            message: "Please fill all the fields properly then try to login."
           });
-        }
-      };
 
-      signUpUser = () => {
+          this.fetchUserDetails();
+        }
+      }
+
+      componentWillUnmount() {
+        this._isMounted = false;
+      }
+
+      updateUserProfilePicture = () => {
+        const { updatedProfilePicture } = this.state;
+
         const {
-          signupEmail,
-          signupPassword,
-          signupFullName,
-          signupMobileNumber,
-          signupAddress,
-          signupAge,
-          signupProfilePicture
-        } = this.state;
+          match: {
+            params: { uid }
+          }
+        } = this.props;
 
-        if (
-          signupEmail &&
-          signupPassword &&
-          signupFullName &&
-          signupMobileNumber &&
-          signupAddress &&
-          signupAge &&
-          signupProfilePicture
-        ) {
-          fire
-            .auth()
-            .createUserWithEmailAndPassword(signupEmail, signupPassword)
-            .then(user => {
-              const uid = fire.auth().currentUser.uid;
+        const uploadImageTask = storage
+          .ref(`Images/${uid}`)
+          .put(updatedProfilePicture);
 
-              fire
-                .database()
-                .ref(`Users/${uid}`)
-                .set({
-                  emailId: signupEmail,
-                  fullName: signupFullName,
-                  mobileNumber: signupMobileNumber,
-                  address: signupAddress,
-                  age: signupAge,
-                  profilePicture: ""
+        uploadImageTask.on(
+          "state_changed",
+          snapshot => {},
+          error => {
+            ToastUtils.handleToast({
+              operation: "error",
+              message: error.message
+            });
+          },
+          () => {
+            storage
+              .ref("Images")
+              .child(uid)
+              .getDownloadURL()
+              .then(url => {
+                fire
+                  .database()
+                  .ref(`Users/${uid}`)
+                  .update({
+                    profilePicture: url
+                  });
+
+                this.setState({
+                  profilePicture: url
                 });
+              });
+          }
+        );
+      };
 
-              const uploadImageTask = storage
-                .ref(`Images/${uid}`)
-                .put(signupProfilePicture);
+      updateUserData = () => {
+        const {
+          isEdited,
+          fullName,
+          emailId,
+          address,
+          age,
+          mobileNumber
+        } = this.state;
+        if (isEdited) {
+          const {
+            match: {
+              params: { uid }
+            }
+          } = this.props;
 
-              uploadImageTask.on(
-                "state_changed",
-                snapshot => {},
-                error => {
-                  ToastUtils.handleToast({
-                    operation: "error",
-                    message: error.message
-                  });
+          fire
+            .database()
+            .ref(`Users/${uid}`)
+            .update({
+              fullName,
+              emailId,
+              address,
+              age,
+              mobileNumber
+            })
+            .then(() => {
+              ToastUtils.handleToast({
+                operation: "success",
+                message: `Users data updated successfully.`
+              });
 
-                  ToastUtils.handleToast({
-                    operation: "success",
-                    message: `${signupFullName} register successfully.`
-                  });
-
-                  this.resetForm();
-                },
-                () => {
-                  storage
-                    .ref("Images")
-                    .child(uid)
-                    .getDownloadURL()
-                    .then(url => {
-                      fire
-                        .database()
-                        .ref(`Users/${uid}`)
-                        .update({
-                          profilePicture: url
-                        });
-                    });
-
-                  ToastUtils.handleToast({
-                    operation: "success",
-                    message: `${signupFullName} register successfully.`
-                  });
-
-                  this.resetForm();
-                }
-              );
+              this.setState({
+                isEdited: false
+              });
             })
             .catch(error => {
               ToastUtils.handleToast({
@@ -216,12 +144,105 @@ const Container = Main =>
                 message: error.message
               });
             });
+        }
+      };
+
+      fetchUserDetails = () => {
+        const {
+          match: {
+            params: { uid }
+          }
+        } = this.props;
+
+        if (uid) {
+          fire
+            .database()
+            .ref(`Users/${uid}`)
+            .once("value")
+            .then(snapshot => {
+              if (snapshot.val()) {
+                const {
+                  fullName,
+                  emailId,
+                  age,
+                  mobileNumber,
+                  address,
+                  profilePicture
+                } = snapshot.val();
+
+                this.setState({
+                  fullName,
+                  emailId,
+                  age,
+                  mobileNumber,
+                  address,
+                  profilePicture
+                });
+              } else {
+                ToastUtils.handleToast({
+                  operation: "error",
+                  message: `Something went wrong please try again`
+                });
+
+                history.push(`/`);
+              }
+            })
+            .catch(error => {
+              ToastUtils.handleToast({
+                operation: "error",
+                message: error.message
+              });
+
+              history.push(`/`);
+            });
         } else {
           ToastUtils.handleToast({
             operation: "error",
-            message: "Please fill all the fields properly."
+            message: `Something went wrong please try again`
           });
+
+          history.push(`/`);
         }
+      };
+
+      editField = (field = "") => {
+        this.setState({
+          typeOfField: field
+        });
+      };
+
+      handleInputChange = async (e, type = "text") => {
+        if (type === "text") {
+          this.setState({
+            [e.target.name]: e.target.value,
+            isEdited: true
+          });
+        } else if (type === "file") {
+          await this.setState({
+            [e.target.name]: e.target.files[0]
+          });
+          this.updateUserProfilePicture();
+        }
+      };
+
+      signOut = () => {
+        fire
+          .auth()
+          .signOut()
+          .then(() => {
+            ToastUtils.handleToast({
+              operation: "success",
+              message: `User sign out successfully`
+            });
+
+            history.push("/");
+          })
+          .catch(error => {
+            ToastUtils.handleToast({
+              operation: "error",
+              message: error.message
+            });
+          });
       };
 
       render() {

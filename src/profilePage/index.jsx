@@ -2,9 +2,24 @@ import React from "react";
 import Container from "./container";
 import styled from "styled-components";
 import background from "../assets/images/loginBackgroud.jpg";
+import dummyProfilePicture from "../assets/images/profilePicture.jpg";
 
 const ProfilePage = props => {
-  const { handleInputChange } = props;
+  const {
+    fullName,
+    emailId,
+    mobileNumber,
+    age,
+    address,
+    profilePicture,
+    editField,
+    typeOfField,
+    handleInputChange,
+    isEdited,
+    updateUserData,
+    signOut
+  } = props;
+
   return (
     <>
       <Profilepage>
@@ -13,20 +28,42 @@ const ProfilePage = props => {
           <Form>
             <BasicInfo>
               <ProfilePicture>
-                <Figure />
-                <ProfileIcon className="fa fa-pencil" />
-                <Input
+                <Figure
+                  profile={
+                    profilePicture ? profilePicture : dummyProfilePicture
+                  }
+                />
+                <ImageProfileIcon className="fa fa-pencil" />
+                <ImageInput
                   type="file"
                   accept="image/gif, image/jpeg, image/png"
                   id="profilePicture"
                   placeholder="Profile Picture"
-                  name="signupProfilePicture"
+                  name="updatedProfilePicture"
                   onChange={e => handleInputChange(e, "file")}
                 />
               </ProfilePicture>
               <FullName>
                 <h3>name : </h3>
-                <p>aditya sawant</p>
+                <ProfileIcon
+                  className="fa fa-pencil"
+                  onClick={() => editField("fullName")}
+                />
+                {typeOfField === "fullName" ? (
+                  <EditContainer>
+                    <Input
+                      className={"input-field"}
+                      type="text"
+                      id="fullname"
+                      placeholder="Full Name"
+                      name="fullName"
+                      value={fullName}
+                      onChange={handleInputChange}
+                    />
+                  </EditContainer>
+                ) : (
+                  <p>{fullName}</p>
+                )}
               </FullName>
               <About>
                 <h3>about : </h3>
@@ -48,21 +85,102 @@ const ProfilePage = props => {
               </About>
               <EmailId>
                 <h3>email id : </h3>
-                <p>addisawant1001@gmail.com</p>
+                {/* <ProfileIcon
+                  className="fa fa-pencil"
+                  onClick={() => editField("emailId")}
+                /> */}
+                {/* {typeOfField === "emailId" ? (
+                  <EditContainer>
+                    <Input
+                      className={"input-field"}
+                      type="text"
+                      id="emailid"
+                      placeholder="Email Id"
+                      name="emailId"
+                      value={emailId}
+                      onChange={handleInputChange}
+                    />
+                  </EditContainer>
+                ) : ( */}
+                <p>{emailId}</p>
+                {/* )} */}
               </EmailId>
               <MobileNumber>
                 <h3>mobile number : </h3>
-                <p>+91 9820365585</p>
+                <ProfileIcon
+                  className="fa fa-pencil"
+                  onClick={() => editField("mobileNumber")}
+                />
+                {typeOfField === "mobileNumber" ? (
+                  <EditContainer>
+                    <Input
+                      className={"input-field"}
+                      type="number"
+                      id="mobile-number"
+                      placeholder="Mobile Number"
+                      name="mobileNumber"
+                      value={mobileNumber}
+                      onChange={handleInputChange}
+                    />
+                  </EditContainer>
+                ) : (
+                  <p>+91 {mobileNumber}</p>
+                )}
               </MobileNumber>
               <Age>
                 <h3>age : </h3>
-                <p>24</p>
+                <ProfileIcon
+                  className="fa fa-pencil"
+                  onClick={() => editField("age")}
+                />
+                {typeOfField === "age" ? (
+                  <EditContainer>
+                    <Input
+                      className={"input-field"}
+                      type="number"
+                      id="age"
+                      placeholder="Age"
+                      name="age"
+                      value={age}
+                      onChange={handleInputChange}
+                    />
+                  </EditContainer>
+                ) : (
+                  <p>{age}</p>
+                )}
               </Age>
               <Address>
                 <h3>address : </h3>
-                <p>mumbai, maharashtra</p>
+                <ProfileIcon
+                  className="fa fa-pencil"
+                  onClick={() => editField("address")}
+                />
+                {typeOfField === "address" ? (
+                  <EditContainer>
+                    <Input
+                      className={"input-field"}
+                      type="text"
+                      id="address"
+                      placeholder="address"
+                      name="address"
+                      value={address}
+                      onChange={handleInputChange}
+                    />
+                  </EditContainer>
+                ) : (
+                  <p>{address}</p>
+                )}
               </Address>
             </BasicInfo>
+            <FormControls className="form-controls">
+              <SignOut onClick={signOut}>Sign Out</SignOut>
+              <Update
+                className={isEdited ? "active" : ""}
+                onClick={updateUserData}
+              >
+                Update
+              </Update>
+            </FormControls>
           </Form>
         </PageWrapper>
       </Profilepage>
@@ -116,26 +234,87 @@ const ProfilePicture = styled.div`
 const Figure = styled.div`
   width: 150px;
   height: 150px;
-  background: url(${background}) 50% 50% no-repeat;
+  background: url(${props => props.profile}) 50% 50% no-repeat;
   background-size: cover;
   border-radius: 50%;
   overflow: hidden;
   border: 7px solid #e03e6e;
 `;
 
-const FullName = styled.div``;
+const FullName = styled.div`
+  margin-right: 225px;
+  position: relative;
 
-const About = styled.div``;
+  &:hover i {
+    opacity: 0.5;
 
-const EmailId = styled.div``;
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
 
-const MobileNumber = styled.div``;
+const About = styled.div`
+  position: relative;
 
-const Age = styled.div``;
+  &:hover i {
+    opacity: 0.5;
 
-const Address = styled.div``;
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
 
-const Input = styled.input`
+const EmailId = styled.div`
+  position: relative;
+
+  &:hover i {
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
+
+const MobileNumber = styled.div`
+  position: relative;
+
+  &:hover i {
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
+
+const Age = styled.div`
+  position: relative;
+
+  &:hover i {
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
+
+const Address = styled.div`
+  position: relative;
+
+  &:hover i {
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
+
+const ImageInput = styled.input`
   width: 30px;
   height: 30px;
   position: absolute;
@@ -147,7 +326,7 @@ const Input = styled.input`
   cursor: pointer;
 `;
 
-const ProfileIcon = styled.i`
+const ImageProfileIcon = styled.i`
   width: 30px;
   height: 30px;
   display: flex;
@@ -165,6 +344,70 @@ const ProfileIcon = styled.i`
   border-radius: 50%;
   box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.5);
   cursor: pointer;
+`;
+
+const EditContainer = styled.div``;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0 0 2px 0;
+  border-style: none;
+  border-bottom: 2px solid #e03e6e;
+  background: transparent;
+  outline: none;
+  font-size: 15px;
+  letter-spacing: 0.75px;
+  box-sizing: border-box;
+`;
+
+const ProfileIcon = styled.i`
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  cursor: pointer;
+`;
+
+const FormControls = styled.div`
+  padding-top: 20px;
+  margin-bottom: 20px;
+`;
+
+const SignOut = styled.a`
+  padding: 10px 30px;
+  margin-right: 5px;
+  font-size: 15px;
+  font-weight: 900;
+  border-style: none;
+  /* border: 4px solid #1b0d0a; */
+  border-radius: 50px;
+  text-transform: uppercase;
+  color: #fff;
+  background: #1b0d0a;
+  color: #eebd9d;
+  /* background-image: linear-gradient(to right, #aa076b, #61045f); */
+  cursor: pointer;
+`;
+
+const Update = styled.a`
+  padding: 10px 30px;
+  font-size: 15px;
+  font-weight: 900;
+  border-style: none;
+  /* border: 4px solid #1b0d0a; */
+  border-radius: 50px;
+  text-transform: uppercase;
+  color: #fff;
+  background: #1b0d0a;
+  color: #eebd9d;
+  /* background-image: linear-gradient(to right, #aa076b, #61045f); */
+
+  opacity: 0.7;
+
+  &.active {
+    opacity: 1;
+    cursor: pointer;
+  }
 `;
 
 export default Container(ProfilePage);

@@ -5,25 +5,12 @@ import { Provider } from "react-redux";
 import { store } from "../src/store";
 import { fire } from "./config/fire";
 import Routes from "./routes";
+import history from "./history";
 
 class App extends Component {
-  authListener = () => {
-    fire.auth().onAuthStateChanged(user => {
-      if (user) {
-        console.log(user);
-      } else {
-        console.log(null);
-      }
-    });
-  };
-
-  componentDidMount() {
-    this.authListener();
-  }
-
   render() {
     return (
-      <Provider store={store}>
+      <Provider history={history} store={store}>
         <Routes />
       </Provider>
     );

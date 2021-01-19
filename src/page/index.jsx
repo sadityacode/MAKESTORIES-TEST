@@ -213,6 +213,10 @@ const PageWrapper = styled.div`
   justify-content: center;
   align-content: center;
   align-items: center;
+
+  @media (max-width: 1100px) {
+    width: 90%;
+  }
 `;
 
 const LoginContainer = styled.div`
@@ -227,6 +231,10 @@ const LoginContainer = styled.div`
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 776px) {
+    height: 500px;
+  }
 `;
 
 const SignupContainer = styled.div`
@@ -241,6 +249,14 @@ const SignupContainer = styled.div`
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 776px) {
+    height: auto;
+  }
+
+  @media (max-width: 443px) {
+    height: auto;
+  }
 `;
 
 const ImagePanel = styled.div`
@@ -249,18 +265,34 @@ const ImagePanel = styled.div`
   box-sizing: border-box;
   background: url(${background}) 50% 50% no-repeat;
   background-size: cover;
+
+  a {
+    margin-left: 0;
+  }
+
+  @media (max-width: 776px) {
+    width: 100%;
+  }
 `;
 
 const LoginPanel = styled.div`
   width: 50%;
   padding: 30px;
   box-sizing: border-box;
+
+  @media (max-width: 776px) {
+    width: 100%;
+  }
 `;
 
 const SignupPanel = styled.div`
   width: 50%;
   padding: 30px;
   box-sizing: border-box;
+
+  @media (max-width: 776px) {
+    width: 100%;
+  }
 `;
 
 const Heading = styled.h2`
@@ -287,6 +319,11 @@ const FormContainer = styled.div`
     width: 49%;
     display: inline-block;
     margin-right: 2%;
+
+    @media (max-width: 443px) {
+      width: 100%;
+      margin-right: 0;
+    }
   }
 
   &.right-margin-none {
@@ -297,11 +334,21 @@ const FormContainer = styled.div`
     width: 74%;
     display: inline-block;
     margin-right: 2%;
+
+    @media (max-width: 443px) {
+      width: 100%;
+      margin-right: 0;
+    }
   }
 
   &.one-forth-width {
     width: 24%;
     display: inline-block;
+
+    @media (max-width: 443px) {
+      width: 100%;
+      margin-right: 0;
+    }
   }
 `;
 
@@ -383,6 +430,12 @@ const SignUp = styled.a`
   color: #eebd9d;
   /* background-image: linear-gradient(to right, #aa076b, #61045f); */
   cursor: pointer;
+
+  @media (max-width: 776px) {
+    width: 70px;
+    display: block;
+    margin: 20px auto 0;
+  }
 `;
 
 const Label = styled.label`
@@ -395,6 +448,10 @@ const Label = styled.label`
   font-size: 13px;
   color: rgba(0, 0, 0, 0.7);
   cursor: pointer;
+
+  @media (max-width: 335px) {
+    font-size: 10px;
+  }
 `;
 
 export default Container(LandingPage);

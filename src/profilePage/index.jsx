@@ -210,12 +210,22 @@ const Form = styled.form``;
 const BasicInfo = styled.div`
   padding-top: 20px;
   position: relative;
+
+  @media (max-width: 776px) {
+    padding-top: 100px;
+  }
 `;
 
 const ProfilePicture = styled.div`
   position: absolute;
   top: -100px;
   right: 50px;
+
+  @media (max-width: 776px) {
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+  }
 `;
 
 const Figure = styled.div`
@@ -251,6 +261,10 @@ const FullName = styled.div`
     &:hover {
       opacity: 1;
     }
+  }
+
+  @media (max-width: 776px) {
+    margin-right: 0px;
   }
 `;
 
@@ -371,6 +385,17 @@ const ProfileIcon = styled.i`
 const FormControls = styled.div`
   padding-top: 20px;
   margin-bottom: 20px;
+
+  @media (max-width: 443px) {
+    display: flex;
+    flex-direction: column;
+
+    a {
+      width: 80px;
+      display: block;
+      margin: 5px auto;
+    }
+  }
 `;
 
 const SignOut = styled.a`

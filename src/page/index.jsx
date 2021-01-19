@@ -449,7 +449,7 @@ const Label = styled.label`
   color: rgba(0, 0, 0, 0.7);
   cursor: pointer;
 
-  @media (max-width: 335px) {
+  @media (max-width: 443px) {
     font-size: 10px;
   }
 `;

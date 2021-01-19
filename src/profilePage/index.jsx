@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "./container";
 import styled from "styled-components";
-import background from "../assets/images/cakeBackground.jpeg";
+import background from "../assets/images/cakeBackground.jpg";
 import dummyProfilePicture from "../assets/images/profilePicture.jpg";
 import FullPageLoader from "../commonComponent/FullPageLoader";
 
@@ -201,6 +201,8 @@ const CoverPage = styled.div`
   height: 200px;
   background: url(${background}) 50% 50% no-repeat;
   background-size: cover;
+  position: relative;
+  z-index: -2;
 `;
 
 const Form = styled.form``;
@@ -224,6 +226,19 @@ const Figure = styled.div`
   border-radius: 50%;
   overflow: hidden;
   border: 7px solid #e03e6e;
+  position: relative;
+
+  &::before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: url(${dummyProfilePicture}) 50% 50% no-repeat;
+    background-size: cover;
+  }
 `;
 
 const FullName = styled.div`

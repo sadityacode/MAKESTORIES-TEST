@@ -208,25 +208,25 @@ const Container = Main =>
                     .ref("Images")
                     .child(uid)
                     .getDownloadURL()
-                    .then(url => {
+                    .then(async url => {
                       fire
                         .database()
                         .ref(`Users/${uid}`)
                         .update({
                           profilePicture: url
                         });
+
+                      await this.props.dataLoadingStop();
+
+                      ToastUtils.handleToast({
+                        operation: "success",
+                        message: `${signupFullName} register successfully.`
+                      });
+
+                      // await this.resetForm();
+
+                      this.props.history.push(`/user/${uid}`);
                     });
-
-                  await this.props.dataLoadingStop();
-
-                  ToastUtils.handleToast({
-                    operation: "success",
-                    message: `${signupFullName} register successfully.`
-                  });
-
-                  // await this.resetForm();
-
-                  this.props.history.push(`/user/${uid}`);
                 }
               );
             })

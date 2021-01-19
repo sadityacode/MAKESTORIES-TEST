@@ -17,6 +17,7 @@ const LandingPage = props => {
     signupMobileNumber,
     signupAddress,
     signupAge,
+    signupProfilePicture,
     signUpUser,
     signInUser,
     isLoading
@@ -42,7 +43,7 @@ const LandingPage = props => {
                 <Form>
                   <FormData>
                     <FormContainer>
-                      <ProfileIcon className="fa fa-user" />
+                      <Icon className="fa fa-user" />
                       <Input
                         type="text"
                         id="login-email"
@@ -85,7 +86,7 @@ const LandingPage = props => {
                 <Form>
                   <FormData>
                     <FormContainer>
-                      <ProfileIcon className="fa fa-user" />
+                      <Icon className="fa fa-user" />
                       <Input
                         type="text"
                         id="signup-email"
@@ -108,7 +109,7 @@ const LandingPage = props => {
                     </FormContainer>
 
                     <FormContainer className="half-width">
-                      <ProfileIcon className="fa fa-pencil" />
+                      <Icon className="fa fa-pencil" />
                       <Input
                         type="text"
                         id="signup-fullname"
@@ -120,7 +121,7 @@ const LandingPage = props => {
                     </FormContainer>
 
                     <FormContainer className="half-width right-margin-none">
-                      <ProfileIcon className="fa fa-phone" />
+                      <Icon className="fa fa-phone" />
                       <Input
                         type="number"
                         id="signup-mobilenumber"
@@ -153,10 +154,15 @@ const LandingPage = props => {
                       />
                     </FormContainer>
                     <FormContainer>
-                      <ProfileIcon className="fa fa-camera" />
+                      <Icon className="fa fa-camera" />
+                      {!signupProfilePicture && (
+                        <Label for="signup-profilePicture">
+                          Upload profile picture
+                        </Label>
+                      )}
                       <Input
                         type="file"
-                        accept="image/gif, image/jpeg, image/png"
+                        accept="image/jpeg, image/png, image/jpg"
                         id="signup-profilePicture"
                         placeholder="Profile Picture"
                         name="signupProfilePicture"
@@ -313,9 +319,13 @@ const Input = styled.input`
   margin-bottom: 10px;
   box-sizing: border-box;
   outline: none;
+
+  &#signup-profilePicture {
+    cursor: pointer;
+  }
 `;
 
-const ProfileIcon = styled.i`
+const Icon = styled.i`
   position: absolute;
   top: 50%;
   left: 18px;
@@ -372,6 +382,18 @@ const SignUp = styled.a`
   background: #1b0d0a;
   color: #eebd9d;
   /* background-image: linear-gradient(to right, #aa076b, #61045f); */
+  cursor: pointer;
+`;
+
+const Label = styled.label`
+  padding: 5px 0;
+  position: absolute;
+  top: 40%;
+  left: 138px;
+  background-color: #fff;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.7);
   cursor: pointer;
 `;
 
